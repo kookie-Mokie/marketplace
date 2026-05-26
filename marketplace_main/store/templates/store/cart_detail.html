@@ -1,0 +1,76 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+
+<h2 class="mb-4">Mi Carrito</h2>
+
+{% if cart.cartitem_set.all %}
+
+<table class="table table-bordered align-middle">
+    <thead>
+        <tr>
+            <th>Producto</th>
+            <th>Precio</th>
+            <th>Cantidad</th>
+            <th>Subtotal</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+    {% for item in cart.cartitem_set.all %}
+        <tr>
+
+            <td>{{ item.product.name }}</td>
+
+            <td>$ {{ item.product.price }}</td>
+
+            <td>
+                <form method="POST"
+                      action="{% url 'update_cart_item' item.id %}">
+                    {% csrf_token %}
+
+                    <input type="number"
+                           name="quantity"
+                           value="{{ item.quantity }}"
+                           min="1"
+                           class="form-control"
+                           style="width:90px;">
+
+                    <button class="btn btn-sm btn-primary mt-2">
+                        Actualizar
+                    </button>
+                </form>
+            </td>
+
+            <td>
+                $ {{ item.subtotal }}
+            </td>
+
+            <td>
+                <a href="{% url 'remove_from_cart' item.id %}"
+                   class="btn btn-danger btn-sm">
+                    Eliminar
+                </a>
+            </td>
+
+        </tr>
+    {% endfor %}
+
+    </tbody>
+</table>
+
+<div class="text-end">
+    <h3>Total: $ {{ cart.total }}</h3>
+</div>
+
+{% else %}
+
+<div class="alert alert-info">
+    Tu carrito está vacío
+</div>
+
+{% endif %}
+
+{% endblock %}

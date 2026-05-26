@@ -72,6 +72,11 @@ class Cart(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
 
+    @property
+    def total(self):
+        # Usamos related_name implícito (cartitem_set) para sumar los subtotales
+        return sum(item.subtotal for item in self.cartitem_set.all())
+
     def __str__(self):
         return f"Cart {self.id} - {self.user}"
 
@@ -84,11 +89,14 @@ class CartItem(models.Model):
 
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-
     quantity = models.PositiveIntegerField(default=1)
 
     class Meta:
         unique_together = ('cart', 'product')
+
+    @property
+    def subtotal(self):
+        return self.product.price * self.quantity
 
     def __str__(self):
         return f"{self.product} x {self.quantity}"
