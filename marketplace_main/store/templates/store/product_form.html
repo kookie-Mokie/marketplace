@@ -1,0 +1,18 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+
+<h2>Producto</h2>
+
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <button class="btn btn-primary">Guardar</button>
+</form>
+
+{% endblock %}
+
+{% if user.is_authenticated and user.is_seller %}
+    <a href="{% url 'dashboard' %}" class="btn btn-warning btn-sm me-2">Dashboard</a>
+{% endif %}
