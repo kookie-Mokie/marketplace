@@ -1,0 +1,35 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+
+<h2 class="mb-4">Productos</h2>
+
+<div class="row">
+    {% for product in products %}
+    <div class="col-md-4">
+        <div class="card mb-4 shadow-sm">
+            <div class="card-body">
+                <h5>{{ product.name }}</h5>
+                <p>{{ product.description|truncatechars:80 }}</p>
+
+                <p><strong>$ {{ product.price }}</strong></p>
+
+                <small class="text-muted">
+                    Vendedor: {{ product.owner.username }}
+                </small>
+
+                <div class="mt-2">
+                    {% for cat in product.categories.all %}
+                        <span class="badge bg-secondary">{{ cat.name }}</span>
+                    {% endfor %}
+                </div>
+
+            </div>
+        </div>
+    </div>
+    {% empty %}
+        <p>No hay productos aún.</p>
+    {% endfor %}
+</div>
+
+{% endblock %}
